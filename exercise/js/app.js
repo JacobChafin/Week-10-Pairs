@@ -3,11 +3,11 @@ let y = getRandomNumber(10);
 let problemNumber = 1;
 let score = 0;
 let question = x + ' * ' + y;
-let answer = x * y;
+let randomAnswer4 = x * y;
+
 let randomAnswer1 = getRandomNumber(10) * getRandomNumber(10);
 let randomAnswer2 = getRandomNumber(10) * getRandomNumber(10);
 let randomAnswer3 = getRandomNumber(10) * getRandomNumber(10);
-let problems = [answer1, answer2, answer3, answer4];
 let count = 0;
 
 let toggleHide = document.querySelectorAll('.show-hide');
@@ -23,6 +23,8 @@ let answer2 = document.getElementById('answer2');
 let answer3 = document.getElementById('answer3');
 let answer4 = document.getElementById('answer4');
 let btnStartOver = document.getElementById('btnStartOver');
+let whereToWriteProblems = [answer1, answer2, answer3, answer4];
+let whatProblemsToWrite = [randomAnswer1,randomAnswer2,randomAnswer3,randomAnswer4];
 
 //given functions
 function getRandomNumber(max) {
@@ -34,16 +36,6 @@ function shuffleArray(arr) {
 }
 //given functions
 
-
-
-
-
-
-
-
-
-
-
 function setQuestion() {
 x = getRandomNumber(10);
 y = getRandomNumber(10);
@@ -51,31 +43,33 @@ question = x + ' * ' + y;
     problemDiv.innerText = question;
 }
 
-function setAnswer4() {
-    answer = x * y;
-    answer4.innerText = answer;
-}
 
+// Setting unique answers
+function setAnswer4() {
+    randomAnswer4 = x * y;
+    // answer4.innerText = randomAnswer4;
+}
 function setAnswer1() {
     do {
         randomAnswer1 = getRandomNumber(10) * getRandomNumber(10);
-    } while (randomAnswer1 == answer);
-    answer1.innerText = randomAnswer1;
+    } while (randomAnswer1 == randomAnswer4);
+    // answer1.innerText = randomAnswer1;
 }
-
 function setAnswer2() {
     do {
         randomAnswer2 = getRandomNumber(10) * getRandomNumber(10);
-    } while (randomAnswer2 == answer || randomAnswer2 == randomAnswer1);
-    answer2.innerText = randomAnswer2;
+    } while (randomAnswer2 == randomAnswer4 || randomAnswer2 == randomAnswer1);
+    // answer2.innerText = randomAnswer2;
 }
-
 function setAnswer3() {
     do {
         randomAnswer3 = getRandomNumber(10) * getRandomNumber(10);
-    } while (randomAnswer3 == answer || randomAnswer3 == randomAnswer1 || randomAnswer3 == randomAnswer2);
-    answer3.innerText = randomAnswer3;
+    } while (randomAnswer3 == randomAnswer4 || randomAnswer3 == randomAnswer1 || randomAnswer3 == randomAnswer2);
+    // answer3.innerText = randomAnswer3;
 }
+//setting unique answers
+
+
 function increaseScore() {
     score = score + 1;
     currentScore.innerText = score;
@@ -89,6 +83,11 @@ function endOfQuiz() {
     toggle.classList.add('hidden');
     })
 }
+function startOfQuiz() {
+    toggleHide.forEach((toggle) => {
+        toggle.classList.remove('hidden');
+    })
+}
 function resetProblem() {
     problemNumber = 1;
     currentProblem.innerText = problemNumber;
@@ -98,31 +97,37 @@ function resetScore() {
     currentScore.innerText = score;
 }
 
-setQuestion();
+
+
+function settingAllAnswers() {
+setQuestion();  
+setAnswer4();  
 setAnswer1();
 setAnswer2();
 setAnswer3();
-setAnswer4();
-shuffleArray(problems);
+whereToWriteProblems = [answer1, answer2, answer3, answer4];
+whatProblemsToWrite = [randomAnswer1,randomAnswer2,randomAnswer3,randomAnswer4];
+shuffleArray(whereToWriteProblems);
+for (let i =0; i < whereToWriteProblems.length; i++) {
+whereToWriteProblems[i].innerText = whatProblemsToWrite[i];
+}
+}
 
-
+setQuestion();
+setAnswer4();  
+setAnswer1();
+setAnswer2();
+setAnswer3();
+settingAllAnswers();
 
 answer1.addEventListener('click', (event) => {
 
-    shuffleArray(problems);
-    for (let i = 0; i < problems.length; i++) {
-        count = count + 1;
-        problems[i].innerText = randomAnswer + count;
+    if (event.target.innerText == randomAnswer4){
+        increaseScore();
     }
 
-
-
-    
     setQuestion();
-    setAnswer1();
-    setAnswer2();
-    setAnswer3();
-    setAnswer4();
+    settingAllAnswers();
     increaseProblem();
     if (problemNumber == 10) {
     endOfQuiz();
@@ -130,11 +135,12 @@ answer1.addEventListener('click', (event) => {
 })
 answer2.addEventListener('click', (event) => {
     
+    if (event.target.innerText == randomAnswer4){
+        increaseScore();
+    }
+
     setQuestion();
-    setAnswer1();
-    setAnswer2();
-    setAnswer3();
-    setAnswer4();
+    settingAllAnswers();
     increaseProblem();
     if (problemNumber == 10) {
         endOfQuiz();
@@ -142,12 +148,12 @@ answer2.addEventListener('click', (event) => {
 })
 answer3.addEventListener('click', (event) => {
     
-    
+    if (event.target.innerText == randomAnswer4){
+        increaseScore();
+    }
+
     setQuestion();
-    setAnswer1();
-    setAnswer2();
-    setAnswer3();
-    setAnswer4();
+    settingAllAnswers();
     increaseProblem();
     if (problemNumber == 10) {
         endOfQuiz();
@@ -155,12 +161,12 @@ answer3.addEventListener('click', (event) => {
 })
 answer4.addEventListener('click', (event) => {
 
-    increaseScore();
+    if (event.target.innerText == randomAnswer4){
+        increaseScore();
+    }
+
     setQuestion();
-    setAnswer1();
-    setAnswer2();
-    setAnswer3();
-    setAnswer4();
+    settingAllAnswers();
     increaseProblem();
     if (problemNumber == 10) {
         endOfQuiz();
@@ -168,40 +174,8 @@ answer4.addEventListener('click', (event) => {
 })
 btnStartOver.addEventListener('click', (event) => {
     setQuestion();
-    setAnswer1();
-    setAnswer2();
-    setAnswer3();
-    setAnswer4();
+    settingAllAnswers();
     resetProblem();
     resetScore();
-
+    startOfQuiz();
 })
-
-
-
-
-
-
-
-
-
-
-
-// function shuffleArray(arr) {
-//     let currentIndex = arr.length, randomIndex;
-//     while (currentIndex != 0) {
-//         randomIndex = Math.floor(Math.random() * currentIndex);
-//         currentIndex --;
-//         [array[answer], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-//     }
-//     return array;
-// }
-
-// OR ??
-// function shuffleARray(array) {
-//     for(let i = array.length -1; i> 0; i--){
-//         const j = Math.floor(Math.random() * (i +1));
-//         [array[i], array[j]] = [array[j], array[i]];
-
-//     }
-// }
